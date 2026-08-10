@@ -1,0 +1,7 @@
+---
+- name: Deploy wordPress server
+  hosts: servers
+  become: true
+
+  roles:
+    - wordpress

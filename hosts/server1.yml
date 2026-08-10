@@ -1,0 +1,4 @@
+---
+ansible_hoste: 192.168.64.8
+ansible_user: client1
+ansible_python_interpreter: /usr/bin/python3

@@ -1,0 +1,7 @@
+#SPDX-License-Identifier: MIT-0
+---
+- name: Reload Apache
+  ansible.builtin.service:
+    name: apache2
+    state: reloaded
+# handlers file for roles/wordpress

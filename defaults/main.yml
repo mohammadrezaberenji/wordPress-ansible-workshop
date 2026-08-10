@@ -1,0 +1,9 @@
+#SPDX-License-Identifier: MIT-0
+---
+
+wordpress_domain: wordpress.lab.test
+wordpress_root: /var/www/wordpress
+wordpress_db_name: wordpress
+wordpress_db_user: wordpress
+
+# defaults file for roles/wordpress

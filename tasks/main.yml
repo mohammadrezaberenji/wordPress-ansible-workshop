@@ -1,0 +1,115 @@
+#SPDX-License-Identifier: MIT-0
+---
+- name: Install WordPress required packages
+  ansible.builtin.apt:
+    name:
+      - apache2
+      - mariadb-server
+      - php
+      - libapache2-mod-php
+      - php-mysql
+      - php-curl
+      - php-gd
+      - php-mbstring
+      - php-xml
+      - php-zip
+      - python3-pymysql
+      - unzip
+    state: present
+    update_cache: true
+    lock_timeout: 300
+
+- name: Ensure Apache is enabled 
+  ansible.builtin.service:
+    name: apache2
+    state: started
+    enabled: true
+
+- name: Ensure MariaDb is active and running
+  ansible.builtin.service:
+    name: mariadb
+    state: started
+    enabled: true 
+
+- name: Create WordPress dataBase
+  community.mysql.mysql_db:
+    name: "{{ wordpress_db_name }}"
+    state: present
+    login_unix_socket: /run/mysqld/mysqld.sock
+- name: Create DataBase User
+  community.mysql.mysql_user:
+    name: "{{ wordpress_db_user }}"
+    password: "{{ wordpress_db_password }}"
+    host: localhost
+    priv: "{{ wordpress_db_name }}.*:ALL"
+    state: present
+    update_password: on_create
+    login_unix_socket: /run/mysqld/mysqld.sock
+- name: WordPress web user root
+  ansible.builtin.file:
+    path: "{{ wordpress_root }}"
+    state: directory
+    owner: www-data
+    group: www-data
+    mode: "0755"
+- name: Download Archives
+  ansible.builtin.get_url:
+    url: https://wordpress.org/latest.tar.gz
+    dest: /tmp/wordpress.tar.gz
+    mode: "0644"
+- name: Extract wordpress into web root
+  ansible.builtin.unarchive:
+    src: /tmp/wordpress.tar.gz
+    dest: "{{ wordpress_root }}"
+    remote_src: true
+    extra_opts:
+      - --strip-component=1
+    creates: "{{ wordpress_root }}/wp-settings.php"
+- name: Set wordPress ownerShip
+  ansible.builtin.file:
+    path: "{{ wordpress_root }}"
+    owner: www-data
+    group: www-data
+    recurse: true
+- name: Create wp-config.php
+  no_log: true
+  ansible.builtin.template:
+    src: wp-config.php.j2
+    dest: "{{ wordpress_root }}/wp-config.php"
+    owner: www-data
+    group: www-data
+    mode: "0640"
+
+- name: Enable Apache
+  ansible.builtin.command:
+    cmd: a2enmod rewrite
+    creates: /etc/apache2/mode-enabled/rewrite.load
+  notify: Reload Apache
+
+- name: Create wordpress Apache virtual host
+  ansible.builtin.template:
+    src: wordpress.conf.j2
+    dest: /etc/apache2/sites-available/wordpress.conf
+    owner: root
+    group: root
+    mode: "0644"
+  notify: Reload Apache
+
+- name: Enable Site
+  ansible.builtin.command:
+    cmd: a2ensite wordpress
+    creates: /etc/apache2/sites-enabled/wordpress.conf
+  notify: Reload Apache
+
+- name: Disable Apahce Defualt page
+  ansible.builtin.command:
+    cmd: a2dissite 000-default
+    removes: /etc/apache2/sites-enabled/000-default.conf
+
+  notify: Reload Apache
+
+- name: Validate Apache configuration
+  ansible.builtin.command: apache2ctl configtest
+  changed_when: false
+
+#tasks file for roles/wordpress

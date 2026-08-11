@@ -1,7 +1,8 @@
 Role Name
 =========
 
-A brief description of the role goes here.
+In this Repository we are going to implement wordpress with mariaDb and apache web server. for applying our changes, I made a new role for ansible with name wordpress.
+
 
 Requirements
 ------------

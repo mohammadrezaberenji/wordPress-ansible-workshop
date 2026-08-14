@@ -1,0 +1,9 @@
+#SPDX-License-Identifier: MIT-0
+---
+- name: Install LAMP packages
+  ansible.builtin.import_tasks: packages.yml
+
+- name: Start LAMP services
+  ansible.builtin.import_tasks: services.yml
+
+# tasks file for roles/lamp

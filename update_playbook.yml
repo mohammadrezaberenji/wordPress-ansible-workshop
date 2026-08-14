@@ -1,0 +1,13 @@
+---
+- name: echo script
+  hosts: all
+
+  tasks:
+    - name: This is test echo on client
+      command: echo ' this is test '
+      register: result
+
+    - name: Show out put
+      debug:
+        var: result.stdout 
+

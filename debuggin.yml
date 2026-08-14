@@ -1,0 +1,14 @@
+---
+- name: debuggin playbook
+  hosts: all
+  become: true
+
+  tasks:
+    - name: nginx status
+      command: sytemctl is-active nginx
+      register: nginx_result
+      ignore_erros: yes
+
+    - name: show nginx ststus
+      debug:
+        msg: " Nginx status is {{ nginx_result.stdout }}"    

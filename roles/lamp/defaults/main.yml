@@ -1,0 +1,14 @@
+#SPDX-License-Identifier: MIT-0
+---
+lamp_packages:
+  - apache2
+  - mariadb-server
+  - php
+  - libapache2-mod-php
+  - php-mysql
+  - php-curl
+  - php-gd
+  - php-mbstring
+  - php-xml
+  - php-zip
+

@@ -1,0 +1,14 @@
+---
+- name: Install htop and vim
+  hosts: all
+  vars:
+    packages:
+      - htop
+      - vim
+  tasks:
+    - name: Install htop
+      apt:
+        name: "{{ packages }}"
+        state: present
+        update_cahe: yes
+      when: ansible_os_family == "Debian"    

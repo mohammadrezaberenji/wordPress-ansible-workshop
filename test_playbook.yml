@@ -1,0 +1,14 @@
+---
+ - name: Just a test scionario 
+   hosts: all
+   tasks:
+     - name: Make Direcoty
+       file: 
+         path: ~/new-test
+         state: directory 
+         mode: "0777"
+     - name: Create a File!
+       copy:
+         content: "Hello Again!"
+         dest: ~/new-test/info.txt
+         mode: "0777"    

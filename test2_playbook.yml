@@ -1,0 +1,32 @@
+---
+- name: Users and directory test
+  hosts: all
+  become: true
+
+  vars:
+    users:
+      - ali
+      - sara
+      - reza
+
+  tasks:
+    - name: Create test2 group
+      group:
+        name: test2
+        state: present
+
+    - name: Create users
+      user:
+        name: "{{ item }}"
+        groups: test2
+        append: true
+        state: present
+      loop: "{{ users }}"
+
+    - name: Create test2 directory
+      file:
+        path: /tmp/test2
+        state: directory
+        owner: reza
+        group: test2
+        mode: "0775"

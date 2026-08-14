@@ -1,0 +1,7 @@
+---
+- name: Install Apache, MariaDB, and PHP packages
+  ansible.builtin.apt:
+    name: "{{ lamp_packages }}"
+    state: present
+    update_cache: true
+    lock_timeout: 300

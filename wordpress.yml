@@ -1,5 +1,5 @@
 ---
-- name: Deploy wordPress server
+- name: Deploy WordPress
   hosts: servers
   become: true
 

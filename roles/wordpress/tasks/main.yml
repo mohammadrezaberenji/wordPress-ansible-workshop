@@ -95,6 +95,14 @@
     mode: "0644"
   notify: Reload Apache
 
+- name: Create PHP test page
+  ansible.builtin.template:
+    src: php-test.php.j2
+    dest: "{{ wordpress_root }}/php-test.php"
+    owner: www-data
+    group: www-data
+    mode: "0644"
+
 - name: Enable Site
   ansible.builtin.command:
     cmd: a2ensite wordpress
